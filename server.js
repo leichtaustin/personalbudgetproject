@@ -15,6 +15,9 @@ app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 const apiRouter = require('./api');
 app.use('/api', apiRouter);
 

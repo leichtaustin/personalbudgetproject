@@ -10,10 +10,22 @@ module.exports = envelopesRouter;
 
 const {
     addEnvToDatabase,
-    getAllFromEnvelopes
+    getAllFromEnvelopes,
+    getEnvelopeById,
 } = require('../db');
 
+envelopesRouter.param('envelopeId', (req, res, next, id) => {
+    const envelope = getEnvelopeById(id);
+    if(envelope) {
+        req.envelope = envelope;
+        next();
+    } else {
+        res.status(404).send();
+    }
+})
+
 envelopesRouter.post('/:name/:category/:value', (req, res, next) => {
+    console.log(req.params);
     const newEnvelope = addEnvToDatabase({
         name: req.params.name,
         value: req.params.value,
@@ -25,3 +37,8 @@ envelopesRouter.post('/:name/:category/:value', (req, res, next) => {
 envelopesRouter.get('/', (req, res, next) => {
     res.send(getAllFromEnvelopes());
 });
+
+envelopesRouter.get('/:id', (req, res, next) => {
+    console.log(req.envelope);
+    res.send(req.envelope);
+})
